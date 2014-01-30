@@ -33,5 +33,6 @@ java 1.6, java 1.7
 Accept 
 
 (Original) Author: Bryan W. Berry <bryan.berry@gmail.com>
+
 (Hack) Author: Mike Thomas <mthomas@predictivelogic.com>
 License: Apache v2.0
