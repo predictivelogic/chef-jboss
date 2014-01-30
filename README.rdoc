@@ -6,7 +6,7 @@ needed to get JBoss deployed right away, thus the sledgehammer approach.
 
 
 
-*JBOSS AS 7 cookbook*
+<b>JBOSS AS 7 cookbook</b>
 
 This is a very simple cookbook. It only installs the jboss, configures
 the system V init script to run in standalone mode
