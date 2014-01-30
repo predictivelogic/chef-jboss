@@ -1,5 +1,12 @@
 = DESCRIPTION:
-JBOSS AS 7 cookbook
+This is a fork of the opscode JBoss cookbook.  The fork was necessary (IMO)
+because the opscode version has a hard dependency on Chef Server.  I'm sure 
+there are better ways to address that issue, but I'm a Chef newbie and just 
+needed to get JBoss deployed right away, thus the sledgehammer approach.
+
+
+
+*JBOSS AS 7 cookbook*
 
 This is a very simple cookbook. It only installs the jboss, configures
 the system V init script to run in standalone mode
@@ -10,7 +17,8 @@ The default recipe installs
 
 = REQUIREMENTS:
 
-java 1.6
+java 1.6, java 1.7
+(I've tested with Java 1.7 - MT)
 
 = ATTRIBUTES:
 
@@ -24,5 +32,6 @@ java 1.6
 
 Accept 
 
-Author: Bryan W. Berry <bryan.berry@gmail.com>
+(Original) Author: Bryan W. Berry <bryan.berry@gmail.com>
+(Hack) Author: Mike Thomas <mthomas@predictivelogic.com>
 License: Apache v2.0

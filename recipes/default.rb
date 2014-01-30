@@ -14,9 +14,12 @@ jboss_user = node['jboss']['jboss_user']
 jboss_members = Array.new
 jboss_members << jboss_user
 
-search(:users, "groups:jboss").each do |u|
-  jboss_members << u.id
-end
+# We don't use Chef Server.  There's probably a more elegant 
+# way to get rid of this Chef Server dependency, but at this 
+# point I just want to  provision a JBoss server.
+#search(:users, "groups:jboss").each do |u|
+#  jboss_members << u.id
+#end
 
 tarball_name = node['jboss']['dl_url'].
   split('/')[-1].
