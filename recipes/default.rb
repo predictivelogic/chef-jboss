@@ -9,22 +9,25 @@
 
 jboss_home = node['jboss']['jboss_home']
 jboss_user = node['jboss']['jboss_user']
+jboss_url = node['jboss']['dl_url']
 
 # find all members of the jboss group, so we can make them members
 jboss_members = Array.new
 jboss_members << jboss_user
 
-# (MT) We don't use Chef Server.  There's probably a more 
-# elegant way to get rid of this Chef Server dependency, 
-# but at this  point I just want to  provision a JBoss server,
-# so elegance takes a back seat.
+# (MT) We don't use Chef Server (yet?).  There's probably a more 
+# elegant way to get rid of this Chef Server dependency, but
+# at this  point I just want to  provision a JBoss server, so
+# elegance takes a back seat.
 #search(:users, "groups:jboss").each do |u|
 #  jboss_members << u.id
 #end
 
-tarball_name = node['jboss']['dl_url'].
+ext = '.zip'
+
+jboss_filename = node['jboss']['dl_url'].
   split('/')[-1].
-  sub!('.tar.gz', '')
+  sub!(ext, '')
 path_arr = jboss_home.split('/')
 path_arr.delete_at(-1)
 jboss_parent = path_arr.join('/')
@@ -53,33 +56,42 @@ directory jboss_parent do
 end
 
 # get files
+log "Installing JBoss from #{jboss_url} to #{jboss_parent}"
 bash "put_files" do
   code <<-EOH
   cd /tmp
-  wget #{node['jboss']['dl_url']}
+  wget #{jboss_url}
+
+  cd #{jboss_parent}
+  unzip /tmp/#{jboss_filename}#{ext}
+  UNZIPDIR=`ls`
   
-  tar xvzf #{tarball_name}.tar.gz -C #{jboss_parent}
   chown -R jboss:jboss #{jboss_parent}
-  ln -s #{jboss_parent}/#{tarball_name} #{jboss_home}
-  rm -f #{tarball_name}.tar.gz
+  ln -s $UNZIPDIR #{jboss_home}
+  chown -R jboss:jboss #{jboss_home}
+  rm -f #{jboss_filename}#{ext}
   EOH
   not_if "test -d #{jboss_home}"
 end
 
 
 # set perms on directory
-directory jboss_home do
-  group jboss_user
-  owner jboss_user
-  mode "0755"
-end
+#directory jboss_home do
+#  group jboss_user
+#  owner jboss_user
+#  mode "0755"
+#end
 
 # template init file
 template "/etc/init.d/jboss" do
   if platform? ["centos", "redhat"] 
     source "init_el.erb"
   else
-    source "init_deb.erb"
+    if node['jboss']['version'][0] == "5"
+      source "init_deb5.erb"
+    else
+      source "init_deb.erb"
+    end
   end
   mode "0755"
   owner "root"
@@ -89,6 +101,7 @@ end
 # template jboss-log4j.xml
 
 # start service
+log "Starting JBOSS Service"
 service "jboss" do
   action [ :enable, :start ]
 end

@@ -5,7 +5,7 @@
 # Required-Stop:     $local_fs $remote_fs $network $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start/Stop JBoss AS v7.0.0
+# Short-Description: Start/Stop JBoss AS v5.x
 ### END INIT INFO
 
 
@@ -28,16 +28,14 @@ export PATH=$PATH:$JAVAPTH
 [ -r /etc/profile.d/jboss.sh ] && . /etc/profile.d/jboss.sh
 
 
-
-
 case "$1" in
     start)
-        echo "Starting JBoss AS 7.0.0"
-        sudo -u jboss sh ${JBOSS_HOME}/bin/standalone.sh
+        echo "Starting JBoss AS 5.x"
+        sudo -u jboss sh ${JBOSS_HOME}/bin/run.sh &
     ;;
     stop)
-        echo "Stopping JBoss AS 7.0.0"
-        sudo -u jboss sh ${JBOSS_HOME}/bin/jboss-admin.sh --connect
+        echo "Stopping JBoss AS 5.x0"
+        sudo -u jboss sh ${JBOSS_HOME}/bin/shutdown.sh -S &
     command=:shutdown
     ;;
     *)
